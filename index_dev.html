@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+  <head></head>
+  <body>
+    <script type="module">
+      const eventSource = new EventSource("http://localhost:4001");
+      eventSource.addEventListener('reload', e => {
+        location.reload(true);
+      });
+    </script>
+    <script type="module" src="src/index.js"></script>
+  </body>
+</html>

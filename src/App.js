@@ -13,7 +13,7 @@ const ImageBox = props => Extend(Elementary, {
 
 const App = (...args) => Extend(Elementary, {
   init: function() {
-    this.state = { title: 'hi' }
+    this.state = { title: 'hi... THIS THING WORKS! pretty cool eh?' }
   },
 
   handleClick: function() {

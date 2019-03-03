@@ -10,7 +10,7 @@ Two possible approaches:
   * Simple solution: When the component is first attached (via `attach()`), store mapping of all sub-components that are dependent on the state. Then, in `changeState()`, only replace those sub-components.
 - [ ] Short-circuit state updates if no state has actually changed.
 - [ ] Router (for GitHub Pages)
-- [ ] Watch for file changes and auto-refresh page (dev server).
+- [x] Watch for file changes and auto-refresh page (dev server).
 - [ ] Create grid layout components.
 - [ ] Implement a CSS theme framework.
 - [ ] Implement a common transition-able component.
