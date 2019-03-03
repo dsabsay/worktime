@@ -51,7 +51,6 @@ const Card = (props) => Extend(Elementary, {
 
 const Button = (props) => Extend(Elementary, {
   handleMouseOver: function() {
-    console.log('handleMouseOver');
     const node = this.getNode();
     node.style.transitionDuration = '0.5s';
     node.style.transitionTimingFunction = 'ease';
@@ -68,14 +67,13 @@ const Button = (props) => Extend(Elementary, {
   },
 
   handleClick: function() {
-    console.log('click');
   },
 
   render: function() {
     return button(this.props.label, {
       onmouseover: this.handleMouseOver,
       onmouseout: this.handleMouseOut,
-      onclick: this.handleClick,
+      onclick: this.props.onClick || this.handleClick,
       style: {
         border: 'none',
         // transitionProperty: 'background-color',
@@ -115,7 +113,7 @@ const FlexItem = ElementaryFunc((props) => (
     style: {
       margin: theme.spacing,
       padding: theme.spacing,
-      flex: props.flex || '1 1 auto',
+      flex: props.flex || '0 1 auto',
       ...props.style,
     },
   })

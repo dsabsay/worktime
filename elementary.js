@@ -11,7 +11,6 @@ function Extend(sup, methods, props) {
 class Elementary {
   constructor(props) {
     this._props = props;
-    console.log('props: ', props);
   }
 
   /* Attaches the component to the given DOM node. */
@@ -60,7 +59,28 @@ class Elementary {
       oldState = JSON.parse(JSON.stringify(this.state));
     }
 
+    // Update state
+    // TODO: maybe it would be safer to construct a brand new object by merging
+    //       the old state and the updates, then setting that to this._state
+    //       in one go?
+    // function update(stateRef, updates) {
+    //   Object.keys(updates).map(key => {
+    //     const val = updates[key];
+    //     if (typeof val === 'object') {
+    //       if (!stateRef[key]) {
+    //         stateRef[key] = {};
+    //       }
+    //       return update(stateRef[key], val);
+    //     } else {
+    //       stateRef[key] = val;
+    //     }
+    //   });
+    // }
+    //
+    // update(this._state, delta);
     Object.keys(delta).map(key => this._state[key] = delta[key]);
+
+    // Re-render
     const oldNode = this._node;
     this._node = this.render();
     this._containerNode.replaceChild(this._node, oldNode);
@@ -81,7 +101,9 @@ class Elementary {
 
 function makeElement(el, ...args) {
   var isTextFound = false;
-  const element = document.createElement(el);
+  const element = ['svg', 'circle', 'text'].includes(el)
+    ? document.createElementNS('http://www.w3.org/2000/svg', el)
+    : document.createElement(el);
 
   if (args.length < 1) {
     return element;
@@ -100,11 +122,15 @@ function makeElement(el, ...args) {
       args[i].attach(element);
     } else if (typeof args[i] === 'object') {
       Object.keys(args[i]).map(name => {
+        const value = args[i][name];
         // Add inline styles
         if (name === 'style') {
-          Object.keys(args[i].style).map(styleName => element.style[styleName] = args[i].style[styleName]);
+          Object.keys(value).map(styleName => element.style[styleName] = value[styleName]);
+        } else if (typeof value === 'function') {
+          element[name] = value;  // handles event listeners like onclick
         } else {
-          element[name] = args[i][name];
+          /* SVG elements don't mirror their DOM properties to their attributes */
+          element.setAttribute(name, value);
         }
       });
     } else {
@@ -114,15 +140,6 @@ function makeElement(el, ...args) {
 
   return element;
 }
-
-const div = (...args) => makeElement('div', ...args);
-const h1 = (...args) => makeElement('h1', ...args);
-const h2 = (...args) => makeElement('h2', ...args);
-const p = (...args) => makeElement('p', ...args);
-const a = (...args) => makeElement('a', ...args);
-const button = (...args) => makeElement('button', ...args);
-const img = (...args) => makeElement('img', ...args);
-const br = () => makeElement('br');
 
 function ElementaryFunc(func) {
   return (...args) => {
@@ -170,6 +187,19 @@ function ElementaryFunc(func) {
   }
 }
 
+const div = (...args) => makeElement('div', ...args);
+const h1 = (...args) => makeElement('h1', ...args);
+const h2 = (...args) => makeElement('h2', ...args);
+const p = (...args) => makeElement('p', ...args);
+const a = (...args) => makeElement('a', ...args);
+const button = (...args) => makeElement('button', ...args);
+const img = (...args) => makeElement('img', ...args);
+const br = () => makeElement('br');
+
+const svg = (...args) => makeElement('svg', ...args);
+const circle = (...args) => makeElement('circle', ...args);
+const text = (...args) => makeElement('text', ...args);
+
 export {
   Elementary,
   ElementaryFunc,
@@ -183,4 +213,7 @@ export {
   button,
   img,
   br,
+  svg,
+  circle,
+  text,
 };

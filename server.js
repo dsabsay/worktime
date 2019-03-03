@@ -51,7 +51,7 @@ http.createServer((req, res) => {
   });
 
   const srcDir = path.join(cwd, 'src');
-  fs.watch(srcDir, (eventType, fileName) => {
+  fs.watch(srcDir, { recursive: true }, (eventType, fileName) => {
     res.write(
       `event: reload\ndata:File changed.`
     );
