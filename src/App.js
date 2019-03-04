@@ -3,9 +3,11 @@ import { div } from '../elementary.js';
 
 import { Heading, FlexContainer, FlexItem, Button } from '../cake.js';
 import Timer from './components/Timer.js';
+import DataViewer from './components/DataViewer.js';
 
 const App = (props) => Extend(Elementary, {
-  init: function() {
+  initState: function() {
+    return;
   },
 
   render: function() {
@@ -14,13 +16,16 @@ const App = (props) => Extend(Elementary, {
         FlexItem(
           Heading('Worktime')
         ),
-        FlexItem(Timer({
-          categories: ['Meetings', 'Coding', 'Education', 'Email/Slack', 'Miscellaneous']
-        })
-        )
+        FlexItem(
+          Timer({
+            id: 'my-timer',
+            categories: ['Meetings', 'Coding', 'Education', 'Email/Slack', 'Miscellaneous']
+          })
+        ),
+        FlexItem(DataViewer())
       )
     );
   }
-});
+}, props);
 
 export default App;

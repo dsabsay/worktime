@@ -8,9 +8,29 @@ function Extend(sup, methods, props) {
   return obj;
 }
 
+const store = {};
+
 class Elementary {
   constructor(props) {
     this._props = props;
+    if (!(props.id)) {
+      console.error(`A stateful component must have an ID as a prop! State will
+        not be preserved across re-renders unless an ID is set.`);
+    }
+
+    this._isInitialized = false;
+  }
+
+  _init() {
+    console.log(this);
+    // Initialize or retrieve state
+    if (!store[this.props.id]) {
+      this.initState();  // initState if no state is stored
+      this._isInitialized = true;
+    } else {
+      this.state = store[this.props.id];
+      this._isInitialized = true;
+    }
   }
 
   /* Attaches the component to the given DOM node. */
@@ -21,15 +41,6 @@ class Elementary {
 
   getNode() {
     return this._node;
-  }
-
-  /* Allow this.state to be set in the init() method. */
-  _init() {
-    this._isInitialized = false;
-    if (this.init) {
-      this.init();
-    }
-    this._isInitialized = true;
   }
 
   get props() {
@@ -50,6 +61,7 @@ class Elementary {
       return;
     }
     this._state = val;
+    store[this.props.id] = val;  // update store
   }
 
   /* Updates the component's state object and re-rerenders the component. */
@@ -79,6 +91,9 @@ class Elementary {
     //
     // update(this._state, delta);
     Object.keys(delta).map(key => this._state[key] = delta[key]);
+    console.log(`this._state: ${this._state}`);
+    console.log(this._state);
+    store[this.props.id] = this._state;
 
     // Re-render
     const oldNode = this._node;

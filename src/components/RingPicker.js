@@ -8,7 +8,7 @@ import { theme } from '../../cake.js';
  *   items: array of items to display
  */
 const RingPicker = (props) => Extend(Elementary, {
-  init: function() {
+  initState: function() {
     this.state = { chosen: null };
   },
 

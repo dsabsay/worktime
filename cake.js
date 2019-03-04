@@ -49,7 +49,13 @@ const Card = (props) => Extend(Elementary, {
   }
 }, props);
 
+
+// TODO: Convert to an ElementaryFunc
 const Button = (props) => Extend(Elementary, {
+  initState: function() {
+
+  },
+
   handleMouseOver: function() {
     const node = this.getNode();
     node.style.transitionDuration = '0.5s';
