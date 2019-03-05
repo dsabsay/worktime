@@ -28,13 +28,13 @@ const App = (props) => Extend(Elementary, {
             })
           ),
           FlexItem(
-            a('Data', { href: '/data' })
+            a('Data', { href: HOME + '/data' })
           )
         ),
         Route(
           HOME + '/data',
           FlexItem(DataViewer( { categories: CATEGORIES })),
-          FlexItem(a('Timer', { href: '/' })),
+          FlexItem(a('Timer', { href: HOME + '/' })),
         )
       )
     );
