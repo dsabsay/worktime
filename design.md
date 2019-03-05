@@ -56,5 +56,6 @@ Two possible approaches:
 
 ## Worktime Todos
 - [x] Implement Router (for GitHub Pages)
+- [ ] Create toggle component
 - [ ] Implement Light/Dark mode
 - [ ] Build menu component

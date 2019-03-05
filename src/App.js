@@ -5,7 +5,7 @@ import { Heading, FlexContainer, FlexItem, Button } from '../cake.js';
 import Timer from './components/Timer.js';
 import DataViewer from './components/DataViewer.js';
 
-const CATEGORIES = ['Meetings', 'Coding', 'Education', 'Email/Slack', 'Miscellaneous'];
+const CATEGORIES = ['Meetings', 'Coding', 'Creative', 'Education', 'Email/Slack', 'Other'];
 const HOME = window.location.hostname === 'dsabsay.github.io' ? '/worktime' : '';
 
 const App = (props) => Extend(Elementary, {

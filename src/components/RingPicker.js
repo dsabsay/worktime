@@ -45,7 +45,7 @@ const RingPicker = (props) => Extend(Elementary, {
         }},
         ...items.map(item => circle(
           {
-            fill: this.state.chosen === item.name ? theme.colors.accent : 'gray',
+            fill: this.state.chosen === item.name ? 'black' : 'gray',
             r: item.r,
             cx: item.x,
             cy: item.y,
