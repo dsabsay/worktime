@@ -59,3 +59,5 @@ Two possible approaches:
 - [ ] Create toggle component
 - [ ] Implement Light/Dark mode
 - [ ] Build menu component
+- [ ] lastChangeDate needs to be stored in localStorage so that it persists. Then, when loading records from localStorage, the app can check the lastChangeDate and if it is from a different day than today, it can clear the existing records and notify the user.
+  * Another option is to store records under a key generated from the day's date. That way, all history can be kept. Then, the DataViewer could provide an option to select which day's records to show. Or, the DataViewer could just show all data in localStorage.
