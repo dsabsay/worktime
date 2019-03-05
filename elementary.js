@@ -148,6 +148,8 @@ function makeElement(el, ...args) {
           element.setAttribute(name, value);
         }
       });
+    } else if (args[i] === null) {
+      // do nothing
     } else {
       console.error('Unsupported argument in element composition: ', args[i]);
     }
@@ -193,6 +195,8 @@ function ElementaryFunc(func) {
         //       updating is implemented, this will probably be removed.
         args[i]._init();
         args[i].attach(element);
+      } else if (args[i] === null) {
+        // do nothing
       } else {
         console.error('Unsupported argument in element composition: ', args[i]);
       }
@@ -200,6 +204,15 @@ function ElementaryFunc(func) {
 
     return element;
   }
+}
+
+function Route(route, ...components) {
+  // TODO: need better matching method
+  if (!location.href.includes(route)) {
+    return null;
+  }
+
+  return div(...components);
 }
 
 const div = (...args) => makeElement('div', ...args);
@@ -219,6 +232,7 @@ export {
   Elementary,
   ElementaryFunc,
   Extend,
+  Route,
   makeElement,
   div,
   h1,

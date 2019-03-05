@@ -1,4 +1,4 @@
-import { Elementary, Extend } from '../elementary.js';
+import { Elementary, Extend, Route } from '../elementary.js';
 import { div } from '../elementary.js';
 
 import { Heading, FlexContainer, FlexItem, Button } from '../cake.js';
@@ -14,7 +14,8 @@ const App = (props) => Extend(Elementary, {
     return div({ style: { width: '100%' }},
       FlexContainer({ flexDirection: 'column', style: { alignItems: 'center' } },
         FlexItem(
-          Heading('Worktime')
+          Heading('Worktime'),
+          Route('/data', div('/data')),
         ),
         FlexItem(
           Timer({

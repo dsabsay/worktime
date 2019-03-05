@@ -51,7 +51,10 @@ Two possible approaches:
 
 
   - [ ] If props are required, but not supplied, provide a useful error message.
+  - [ ] Check for duplicate IDs in the store. Produce error message if a duplicate ID is used.
+    - Can be implemented by setting a flag at the beginning of every update, recording all IDs used during that update, and producing the error when a duplicate ID is used.
 
 ## Worktime Todos
 - [ ] Implement Router (for GitHub Pages)
 - [ ] Implement Light/Dark mode
+- [ ] Build menu component

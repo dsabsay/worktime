@@ -5,13 +5,14 @@ const path = require('path');
 
 const DEFAULT_PORT = 4000;
 const DEFAULT_EVENT_STREAM_PORT = 4001;
-const INDEX_PATH = './index.html';
+const INDEX_PATH = './index_dev.html';
 
 const CONTENT_TYPES = {
   '.html': 'text/html',
   '.js': 'text/javascript',
 };
 
+const SPA_REDIRECT_PAGE = '404.html';
 var port = process.argv[2] || DEFAULT_PORT;
 const eventStreamPort = process.argv[3] || DEFAULT_EVENT_STREAM_PORT;
 var cwd = process.cwd();
@@ -22,9 +23,10 @@ http.createServer((req, res) => {
   var uri = path.join(cwd, uriPath);
 
   if (!fs.existsSync(uri)) {
-    res.writeHead(404, { 'Content-Type': 'text/html' });
-    res.write('404: Not found');
-    return res.end();
+    // res.writeHead(404, { 'Content-Type': 'text/html' });
+    // res.write('404: Not found');
+    // return res.end();
+    uri = path.join(cwd, SPA_REDIRECT_PAGE);
   }
 
   if (fs.statSync(uri).isDirectory()) {  // serve index.html in a directory
