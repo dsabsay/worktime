@@ -6,6 +6,7 @@ import Timer from './components/Timer.js';
 import DataViewer from './components/DataViewer.js';
 
 const CATEGORIES = ['Meetings', 'Coding', 'Education', 'Email/Slack', 'Miscellaneous'];
+const HOME = window.location.hostname === 'dsabsay.github.io' ? '/worktime' : '';
 
 const App = (props) => Extend(Elementary, {
   initState: function() {
@@ -19,7 +20,7 @@ const App = (props) => Extend(Elementary, {
           Heading('Worktime')
         ),
         Route(
-          '/',
+          HOME + '/',
           FlexItem(
             Timer({
               id: 'my-timer',
@@ -31,7 +32,7 @@ const App = (props) => Extend(Elementary, {
           )
         ),
         Route(
-          '/data',
+          HOME + '/data',
           FlexItem(DataViewer( { categories: CATEGORIES })),
           FlexItem(a('Timer', { href: '/' })),
         )
