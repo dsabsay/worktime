@@ -19,7 +19,7 @@ Two possible approaches:
   * Simple solution: When the component is first attached (via `attach()`), store mapping of all sub-components that are dependent on the state. Then, in `changeState()`, only replace those sub-components.
 - [ ] Recursively merge state changes. This may not actually be a good idea. React does a shallow merge anyway...
 - [ ] Short-circuit state updates if no state has actually changed.
-- [ ] Router (for GitHub Pages)
+- [x] Router (for GitHub Pages)
 - [x] Watch for file changes and auto-refresh page (dev server).
 - [ ] Create grid layout components.
 - [ ] Implement a CSS theme framework.
@@ -55,6 +55,6 @@ Two possible approaches:
     - Can be implemented by setting a flag at the beginning of every update, recording all IDs used during that update, and producing the error when a duplicate ID is used.
 
 ## Worktime Todos
-- [ ] Implement Router (for GitHub Pages)
+- [x] Implement Router (for GitHub Pages)
 - [ ] Implement Light/Dark mode
 - [ ] Build menu component

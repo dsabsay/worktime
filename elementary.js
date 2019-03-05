@@ -124,6 +124,9 @@ function makeElement(el, ...args) {
     return element;
   }
 
+  // Flatten arrays in args
+  args = args.flat(1);
+  
   for (let i = 0; i < args.length; i++) {
     if (typeof args[i] === 'string' && !isTextFound) {
       element.appendChild(document.createTextNode(args[i]));
@@ -187,6 +190,10 @@ function ElementaryFunc(func) {
 
     // If first arg was props, start at index 1
     const start = (props ? 1 : 0) + (text ? 1 : 0);
+
+    // Flatten arrays in args
+    args = args.flat(1);
+
     for (let i = start; i < args.length; i++) {
       if (args[i] instanceof Element) {
         element.appendChild(args[i]);
@@ -208,11 +215,12 @@ function ElementaryFunc(func) {
 
 function Route(route, ...components) {
   // TODO: need better matching method
-  if (!location.href.includes(route)) {
+  if (location.pathname !== route) {
     return null;
   }
 
-  return div(...components);
+  // return div(...components);
+  return [...components];
 }
 
 const div = (...args) => makeElement('div', ...args);
@@ -223,6 +231,11 @@ const a = (...args) => makeElement('a', ...args);
 const button = (...args) => makeElement('button', ...args);
 const img = (...args) => makeElement('img', ...args);
 const br = () => makeElement('br');
+const table = (...args) => makeElement('table', ...args);
+const tr = (...args) => makeElement('tr', ...args);
+const th = (...args) => makeElement('th', ...args);
+const td = (...args) => makeElement('td', ...args);
+
 
 const svg = (...args) => makeElement('svg', ...args);
 const circle = (...args) => makeElement('circle', ...args);
@@ -245,4 +258,8 @@ export {
   svg,
   circle,
   text,
+  table,
+  tr,
+  th,
+  td,
 };
