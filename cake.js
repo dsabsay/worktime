@@ -1,5 +1,5 @@
 import { ElementaryFunc, Extend, Elementary, makeElement, } from './elementary.js';
-import { div, a, h1, h2, p, button, img, br } from '../elementary.js';
+import { div, a, h1, h2, p, button, img, br } from './elementary.js';
 
 const theme = {
   colors: {
