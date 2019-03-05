@@ -12,7 +12,7 @@ const CONTENT_TYPES = {
   '.js': 'text/javascript',
 };
 
-const SPA_REDIRECT_PAGE = '404.html';
+const SPA_REDIRECT_PAGE = '404_dev.html';
 var port = process.argv[2] || DEFAULT_PORT;
 const eventStreamPort = process.argv[3] || DEFAULT_EVENT_STREAM_PORT;
 var cwd = process.cwd();
