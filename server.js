@@ -30,7 +30,7 @@ http.createServer((req, res) => {
   }
 
   if (fs.statSync(uri).isDirectory()) {  // serve index.html in a directory
-    uri = path.join(uri, 'index.html');
+    uri = path.join(uri, INDEX_PATH);
   }
 
   var file = fs.readFileSync(uri);

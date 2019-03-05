@@ -1,5 +1,6 @@
 import { Elementary, Extend } from '../../elementary.js';
 import { div, p } from '../../elementary.js';
+import { theme } from '../../cake.js';
 
 import { Heading, FlexContainer, FlexItem, Button } from '../../cake.js';
 import RingPicker from './RingPicker.js';
@@ -24,7 +25,7 @@ const Timer = (props) => Extend(Elementary, {
       isRecording: false,
       lastChangeDate: new Date(),
       currentCategory: null,
-      records: {},
+      records: this.loadRecords() || {},
     };
   },
 
@@ -37,6 +38,10 @@ const Timer = (props) => Extend(Elementary, {
 
   saveRecords: function(records) {
     localStorage.setItem('records', JSON.stringify(records));
+  },
+
+  loadRecords: function() {
+    return JSON.parse(localStorage.getItem('records'));
   },
 
   stop: function() {
@@ -68,6 +73,9 @@ const Timer = (props) => Extend(Elementary, {
         isRecording: !this.state.isRecording,
         records: {},
       });
+      this.saveRecords(this.state.records);
+      alert(`It's a new day! Records cleared.`);
+
       return;
     }
 
@@ -99,12 +107,10 @@ const Timer = (props) => Extend(Elementary, {
         FlexItem(
           Button({
             id: 'start-button',
-            label: this.state.isRecording ? 'Stop' : 'Start',
-            onClick: this.handleClickRecord
+            label: this.state.isRecording ? 'Recording... (click to stop)' : 'Start',
+            onClick: this.handleClickRecord,
+            color: this.state.isRecording ? '#ff6e6e' : theme.colors.accent,
           }),
-        ),
-        FlexItem(
-          p(this.state.isRecording ? 'Recording...' : '')
         ),
         FlexItem({ flex: '1 1 auto' },
           RingPicker({

@@ -1,9 +1,11 @@
 import { Elementary, Extend, Route } from '../elementary.js';
-import { div } from '../elementary.js';
+import { div, a } from '../elementary.js';
 
 import { Heading, FlexContainer, FlexItem, Button } from '../cake.js';
 import Timer from './components/Timer.js';
 import DataViewer from './components/DataViewer.js';
+
+const CATEGORIES = ['Meetings', 'Coding', 'Education', 'Email/Slack', 'Miscellaneous'];
 
 const App = (props) => Extend(Elementary, {
   initState: function() {
@@ -14,16 +16,25 @@ const App = (props) => Extend(Elementary, {
     return div({ style: { width: '100%' }},
       FlexContainer({ flexDirection: 'column', style: { alignItems: 'center' } },
         FlexItem(
-          Heading('Worktime'),
-          Route('/data', div('/data')),
+          Heading('Worktime')
         ),
-        FlexItem(
-          Timer({
-            id: 'my-timer',
-            categories: ['Meetings', 'Coding', 'Education', 'Email/Slack', 'Miscellaneous']
-          })
+        Route(
+          '/',
+          FlexItem(
+            Timer({
+              id: 'my-timer',
+              categories: CATEGORIES,
+            })
+          ),
+          FlexItem(
+            a('Data', { href: '/data' })
+          )
         ),
-        FlexItem(DataViewer())
+        Route(
+          '/data',
+          FlexItem(DataViewer( { categories: CATEGORIES })),
+          FlexItem(a('Timer', { href: '/' })),
+        )
       )
     );
   }

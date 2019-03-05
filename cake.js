@@ -69,7 +69,7 @@ const Button = (props) => Extend(Elementary, {
     node.style.transitionDuration = '0.5s';
     node.style.transitionTimingFunction = 'ease';
     node.style.transitionProperty = 'background-color';
-    node.style.backgroundColor = theme.colors.accent;
+    node.style.backgroundColor = this.props.color;
   },
 
   handleClick: function() {
@@ -85,7 +85,7 @@ const Button = (props) => Extend(Elementary, {
         // transitionProperty: 'background-color',
         // transitionDuration: '1s',
         // transitionTimingFunction: 'ease',
-        backgroundColor: theme.colors.accent,
+        backgroundColor: this.props.color,
         cursor: 'pointer',
       }}
     );
