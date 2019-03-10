@@ -172,7 +172,6 @@ function Route(route, ...components) {
 }
 
 function compose(elFunc, ...args) {
-  // el WAS the name of an element, made with createElement()
   var props = null;
   var text = null;
 
@@ -200,8 +199,7 @@ function compose(elFunc, ...args) {
   }
 
   const start = (props ? 1 : 0) + (text ? 1 : 0);
-  // Flatten arrays in args
-  args = args.flat(1);
+  args = args.flat(1);  // Flatten arrays in args
 
   for (let i = start; i < args.length; i++) {
     if (args[i] instanceof Element) {
