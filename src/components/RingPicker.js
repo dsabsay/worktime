@@ -2,13 +2,13 @@ import { Elementary, Extend } from '../../elementary.js';
 import { div, svg, circle, text } from '../../elementary.js';
 
 import { Heading, FlexContainer, FlexItem } from '../../cake.js';
-import { theme } from '../../cake.js';
+import { theme } from '../globals.js';
 
 /* Props:
  *   items: array of items to display
  */
 const RingPicker = (props) => Extend(Elementary, {
-  init: function() {
+  initState: function() {
     this.state = { chosen: null };
   },
 
@@ -45,7 +45,7 @@ const RingPicker = (props) => Extend(Elementary, {
         }},
         ...items.map(item => circle(
           {
-            fill: this.state.chosen === item.name ? theme.colors.accent : 'gray',
+            fill: this.state.chosen === item.name ? 'black' : 'gray',
             r: item.r,
             cx: item.x,
             cy: item.y,
