@@ -1,9 +1,9 @@
 import { Elementary, Extend } from '../../elementary.js';
 import { div, p } from '../../elementary.js';
-import { theme } from '../../cake.js';
 
 import { Heading, FlexContainer, FlexItem, Button } from '../../cake.js';
 import RingPicker from './RingPicker.js';
+import { theme } from '../globals.js'
 
 function isSameDay(d1, d2) {
   return (d1.getFullYear() === d2.getFullYear()

@@ -53,6 +53,14 @@ Two possible approaches:
   - [ ] If props are required, but not supplied, provide a useful error message.
   - [ ] Check for duplicate IDs in the store. Produce error message if a duplicate ID is used.
     - Can be implemented by setting a flag at the beginning of every update, recording all IDs used during that update, and producing the error when a duplicate ID is used.
+  - [ ] Package the library for easy re-use in other projects.
+  - [ ] Provide better error message for Stateful Elementary Class component instantiation.
+    * Right now, if no args are passed in when using a component, we get this error message:
+    ```
+    Uncaught TypeError: Cannot read property 'id' of undefined
+    ```
+    which is not very informative.
+  - [ ] Expose a function to allow creation of HTML elements with programmatically generated tag names. See `cake.Heading`. I don't really want to expose the `compose` function to users directly.
 
 ## Worktime Todos
 - [x] Implement Router (for GitHub Pages)

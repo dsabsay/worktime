@@ -2,7 +2,7 @@ import { Elementary, Extend } from '../../elementary.js';
 import { div, svg, circle, text } from '../../elementary.js';
 
 import { Heading, FlexContainer, FlexItem } from '../../cake.js';
-import { theme } from '../../cake.js';
+import { theme } from '../globals.js';
 
 /* Props:
  *   items: array of items to display

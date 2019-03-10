@@ -1,16 +1,27 @@
 import { Elementary, Extend, Route } from '../elementary.js';
 import { div, a } from '../elementary.js';
 
-import { Heading, FlexContainer, FlexItem, Button } from '../cake.js';
+import { Heading, FlexContainer, FlexItem, Button, Toggle } from '../cake.js';
 import Timer from './components/Timer.js';
 import DataViewer from './components/DataViewer.js';
+import { theme, lightTheme, darkTheme } from './globals.js'
 
 const CATEGORIES = ['Meetings', 'Coding', 'Creative', 'Education', 'Email/Slack', 'Other'];
 const HOME = window.location.hostname === 'dsabsay.github.io' ? '/worktime' : '';
 
 const App = (props) => Extend(Elementary, {
   initState: function() {
-    return;
+    this.state = {
+      isDarkMode: false,
+    };
+  },
+
+  handleDarkModeToggle: function() {
+    // TODO: toggle dark mode
+    theme = this.state.isDarkMode ? lightTheme : darkTheme;
+    this.changeState({
+      isDarkMode: !this.state.isDarkMode,
+    });
   },
 
   render: function() {
@@ -18,6 +29,12 @@ const App = (props) => Extend(Elementary, {
       FlexContainer({ flexDirection: 'column', style: { alignItems: 'center' } },
         FlexItem(
           Heading('Worktime')
+        ),
+        FlexItem(
+          Toggle({
+            id: 'my-toggle',
+            onToggle: this.handleDarkModeToggle,
+          }),
         ),
         Route(
           HOME + '/',
