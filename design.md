@@ -61,6 +61,7 @@ Two possible approaches:
     ```
     which is not very informative.
   - [ ] Expose a function to allow creation of HTML elements with programmatically generated tag names. See `cake.Heading`. I don't really want to expose the `compose` function to users directly.
+  - [ ] Verify if themes can be overriden by child components. If not, we need to allow this.
 
 ## Worktime Todos
 - [x] Implement Router (for GitHub Pages)

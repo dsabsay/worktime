@@ -21,6 +21,12 @@ class Elementary {
     this._isInitialized = false;
   }
 
+  _applyTheme(theme) {
+    // TODO: allow component to override theme
+    this._theme = theme;
+    this.props.theme = theme;
+  }
+
   _init() {
     console.log(this);
     // Initialize or retrieve state
@@ -34,9 +40,10 @@ class Elementary {
   }
 
   /* Attaches the component to the given DOM node. */
-  attach(node) {
+  attachTo(node) {
     this._containerNode = node;
-    this._node = node.appendChild(this.render());
+    this._node = this.render()(this._theme);
+    node.appendChild(this._node);
   }
 
   /* Returns the DOM node representing the root element in the
@@ -157,7 +164,7 @@ function makeSVGElement(el) {
 }
 
 function ElementaryFunc(func) {
-  // func returns an Element
+  // func returns: (props) -> (theme) -> Element
   return (...args) => compose(func, ...args);
 }
 
@@ -171,17 +178,31 @@ function Route(route, ...components) {
   return [...components];
 }
 
+function withTheme(theme, elFunc) {
+
+}
+
+// Returns an element
+function composeWithTheme() {
+
+}
+
+/* elFunc: A function that returns a closure:
+ *         (props) -> (theme) -> Element
+ *
+ * Returns: (theme) -> Element
+ */
 function compose(elFunc, ...args) {
   var props = null;
   var text = null;
+  var theme = null;
 
   // Look for props and text (can be in either order)
   for (let i = 0; i < 2 && i < args.length; i++) {
     if (typeof args[i] === 'string' && !text) {
       text = args[i];
     } else if (typeof args[i] === 'object'
-        && !(args[i] instanceof Element)
-        && !(args[i] instanceof Elementary)
+        && typeof args[i] !== 'function'
         && !Array.isArray(args[i])
         && !props) {
       props = args[i];
@@ -190,33 +211,55 @@ function compose(elFunc, ...args) {
     }
   }
 
+  // Extract theme
+  if (props && props.theme) {
+    theme = props.theme;
+  }
   // NOTE: need to pass empty object if props == null???
   // const element = func(props ? props : {});
-  const element = elFunc(props);
-
-  if (text) {
-    element.appendChild(document.createTextNode(text));
-  }
 
   const start = (props ? 1 : 0) + (text ? 1 : 0);
   args = args.flat(1);  // Flatten arrays in args
 
-  for (let i = start; i < args.length; i++) {
-    if (args[i] instanceof Element) {
-      element.appendChild(args[i]);
-    } else if (args[i] instanceof Elementary) {
-      // TODO: init should only be called once, ever. When smarter DOM
-      //       updating is implemented, this will probably be removed.
-      args[i]._init();
-      args[i].attach(element);
-    } else if (args[i] === null) {
-      // do nothing
-    } else {
-      console.error('Unsupported argument in element composition: ', args[i]);
+  return (th) => {
+    // TODO: allow children to override theme
+    // TODO: merge outer `theme` and inner `th`?
+    if (props === null) {
+      props = {};
     }
-  }
+    if (th) {
+      props.theme = JSON.parse(JSON.stringify(th));
+    }
 
-  return element;
+    var element = elFunc(props);  // This handles the makeHTMLElement variety
+    if (!(element instanceof Element)) {
+      element = element(theme);  // This handles the ElementaryFunc components
+    }
+
+    if (text) {
+      element.appendChild(document.createTextNode(text));
+    }
+
+    for (let i = start; i < args.length; i++) {
+      // TODO: does this branch gobble up the Elementary's? (i.e. is an
+      // Elementary object's typeof === function?
+      if (typeof args[i] === 'function') {
+        element.appendChild(args[i](theme));
+      } else if (args[i] instanceof Elementary) {
+        // TODO: init should only be called once, ever. When smarter DOM
+        //       updating is implemented, this will probably be removed.
+        args[i]._applyTheme(theme);
+        args[i]._init();
+        args[i].attach(element);
+      } else if (args[i] === null) {
+        // do nothing
+      } else {
+        console.error('Unsupported argument in element composition: ', args[i]);
+      }
+    }
+
+    return element;
+  };
 }
 
 // HTML Elements
