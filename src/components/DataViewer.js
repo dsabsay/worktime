@@ -12,8 +12,9 @@ const DataViewer = ElementaryFunc((props) => {
   data = JSON.parse(data);
 
   return table(
-    tr(props.categories.map(cat => th(cat))),
-    tr(props.categories.map(cat => td(data[cat] ? data[cat].toString() : '0')))
+    tr(props.categories.map(cat => th({ style: { color: props.theme.colors.primary } }, cat))),
+    tr(props.categories.map(cat => td({ style: { color: props.theme.colors.primary } },
+                                      data[cat] ? data[cat].toString() : '0')))
   );
 });
 

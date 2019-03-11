@@ -1,8 +1,16 @@
 import { ElementaryFunc, Extend, Elementary, compose, makeHTMLElement } from './elementary.js';
 import { div, a, h1, h2, p, button, img, br, svg, rect, circle } from './elementary.js';
 
-// TODO: We shouldn't pass in the theme like this. Need a better solution.
-import { theme } from './src/globals.js';
+const DEFAULT_THEME = {
+  colors: {
+    primary: '#353535',
+    secondary: '#e2e2e2',
+    background: 'white',
+    accent: '#92cff3',
+  },
+  fontFamily: 'sans-serif',
+  spacing: '1rem',
+};
 
 // const theme = {
 //   colors: {
@@ -70,7 +78,9 @@ const Toggle = (props) => Extend(Elementary, {
           ry: 0.5,
           onclick: this.handleClick,
           style: {
-            fill: this.state.isActive ? theme.colors.accent : theme.colors.secondary,
+            fill: this.state.isActive
+              ? this.props.theme.colors.accent
+              : this.props.theme.colors.secondary,
             stroke: 'gray',
             strokeWidth: '0.007rem',
             cursor: 'pointer',
@@ -156,14 +166,33 @@ const Button = (props) => Extend(Elementary, {
   }
 }, props);
 
+/* Attempts to get the value in obj referenced by keys, and returns defaultValue
+ * if unable.
+ */
+function get(obj, keys, defaultValue) {
+  if (!obj) {
+    return defaultValue;
+  }
+
+  for (let i = 0; i < keys.length; i++) {
+    if (keys[i] in obj) {
+      obj = obj[keys[i]];
+    } else {
+      return defaultValue;
+    }
+  }
+
+  return obj;
+}
+
 const Heading = ElementaryFunc((props) => {
   const size = 'h' + (props && props.size ? props.size : 1);
 
   return compose(makeHTMLElement(size), {
     style: {
-      color: theme.colors.primary,
-      fontFamily: theme.fontFamily,
-      margin: theme.spacing,
+      color: get(props.theme, ['colors', 'primary'], DEFAULT_THEME.colors.primary),
+      fontFamily: get(props.theme, ['fontFamily'], DEFAULT_THEME.fontFamily),
+      margin: get(props.theme, ['spacing'], DEFAULT_THEME.margin),
     }
   });
 });
@@ -181,8 +210,8 @@ const FlexContainer = ElementaryFunc((props) => (
 const FlexItem = ElementaryFunc((props) => (
   div({
     style: {
-      margin: theme.spacing,
-      padding: theme.spacing,
+      margin: props.theme.spacing,
+      padding: props.theme.spacing,
       flex: props && props.flex ? props.flex : '0 1 auto',
       ...(props && props.style),
     },
@@ -196,4 +225,5 @@ export {
   Button,
   Card,
   Toggle,
+  get,
 };

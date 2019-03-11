@@ -3,7 +3,6 @@ import { div, p } from '../../elementary.js';
 
 import { Heading, FlexContainer, FlexItem, Button } from '../../cake.js';
 import RingPicker from './RingPicker.js';
-import { theme } from '../globals.js'
 
 function isSameDay(d1, d2) {
   return (d1.getFullYear() === d2.getFullYear()
@@ -109,7 +108,7 @@ const Timer = (props) => Extend(Elementary, {
             id: 'start-button',
             label: this.state.isRecording ? 'Recording... (click to stop)' : 'Start',
             onClick: this.handleClickRecord,
-            color: this.state.isRecording ? '#ff6e6e' : theme.colors.accent,
+            color: this.state.isRecording ? '#ff6e6e' : this.props.theme.colors.accent,
           }),
         ),
         FlexItem({ flex: '1 1 auto' },
@@ -117,6 +116,12 @@ const Timer = (props) => Extend(Elementary, {
             id: 'my-ring-picker',
             onSelect: this.handleCategorySelect,
             items: this.props.categories,
+            // theme: {
+            //   colors: {
+            //     primary: 'green',
+            //     secondary: 'blue',
+            //   }
+            // }
           })
         )
       )
