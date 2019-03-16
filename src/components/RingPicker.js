@@ -35,8 +35,6 @@ const RingPicker = (props) => Extend(Elementary, {
       };
     });
 
-    console.log("this.props.theme: ", this.props.theme);
-
     return (
       svg({
         viewBox: `-1 -1 2 2`,

@@ -162,6 +162,11 @@ function get(obj, keys, defaultValue) {
   return obj;
 }
 
+/* Scales an rem value (string) by scale. */
+function scaleRem(rem, scale) {
+  return (Number.parseFloat(rem) * scale).toString().concat('rem');
+}
+
 const Heading = ElementaryFunc((props) => {
   const size = 'h' + (props && props.size ? props.size : 1);
 
@@ -203,4 +208,5 @@ export {
   Card,
   Toggle,
   get,
+  scaleRem,
 };
