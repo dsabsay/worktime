@@ -175,6 +175,7 @@ const Heading = ElementaryFunc((props) => {
       color: get(props.theme, ['colors', 'primary'], DEFAULT_THEME.colors.primary),
       fontFamily: get(props.theme, ['fontFamily'], DEFAULT_THEME.fontFamily),
       margin: get(props.theme, ['spacing'], DEFAULT_THEME.margin),
+      ...props.style,
     }
   });
 });
@@ -184,6 +185,7 @@ const FlexContainer = ElementaryFunc((props) => (
     style: {
       display: 'flex',
       flexDirection: props.flexDirection || 'row',
+      alignItems: props.alignItems || 'flex-start',
       ...props.style,
     }
   })

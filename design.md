@@ -67,11 +67,13 @@ Two possible approaches:
   - [ ] Build mechanism to inject default theme into the very root (top) component. This way, components can rely on certain things to be available in the theme (such as colors).
   - [x] Add ability to use `theme.spacing` as a scalar. For example be able to say: `paddingRight: props.theme.spacing * 2`.
     * Could maybe implement this via a method on the `theme.spacing` object. Example usage would be `props.theme.spacing.scale(2)`. Would probably need to create a `BaseTheme` or `ThemeBuilder` class to implement this.
+  - [ ] Make `p`, `div`, etc. elements automatically inherit from the theme. For example, it would be nice if all `p` elements' `color` style was set to theme.colors.primary by default.
 
 ## Worktime Todos
 - [x] Implement Router (for GitHub Pages)
 - [x] Create toggle component
 - [x] Implement Light/Dark mode
 - [ ] Build menu component
-- [ ] lastChangeDate needs to be stored in localStorage so that it persists. Then, when loading records from localStorage, the app can check the lastChangeDate and if it is from a different day than today, it can clear the existing records and notify the user.
+- [x] lastChangeDate needs to be stored in localStorage so that it persists. Then, when loading records from localStorage, the app can check the lastChangeDate and if it is from a different day than today, it can clear the existing records and notify the user.
   * Another option is to store records under a key generated from the day's date. That way, all history can be kept. Then, the DataViewer could provide an option to select which day's records to show. Or, the DataViewer could just show all data in localStorage.
+- [ ] Create a reusable "nav" component to replace the links at the bottom of the page.

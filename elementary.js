@@ -263,6 +263,8 @@ function compose(elFunc, ...args) {
         args[i].attachTo(element);
       } else if (args[i] === null) {
         // do nothing
+      } else if (typeof args[i] === 'string') {
+        element.appendChild(document.createTextNode(args[i]));
       } else {
         console.error('Unsupported argument in element composition: ', args[i]);
       }
@@ -288,6 +290,7 @@ const span = (...args) => compose(makeHTMLElement('span'), ...args);
 const h1 = (...args) => compose(makeHTMLElement('h1'), ...args);
 const h2 = (...args) => compose(makeHTMLElement('h2'), ...args);
 const p = (...args) => compose(makeHTMLElement('p'), ...args);
+const b = (...args) => compose(makeHTMLElement('b'), ...args);
 const a = (...args) => compose(makeHTMLElement('a'), ...args);
 const button = (...args) => compose(makeHTMLElement('button'), ...args);
 const img = (...args) => compose(makeHTMLElement('img'), ...args);
@@ -317,6 +320,7 @@ export {
   h1,
   h2,
   p,
+  b,
   a,
   button,
   img,
