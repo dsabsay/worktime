@@ -21,8 +21,8 @@ Two possible approaches:
 - [ ] Short-circuit state updates if no state has actually changed.
 - [x] Router (for GitHub Pages)
 - [x] Watch for file changes and auto-refresh page (dev server).
-- [ ] Create grid layout components.
-- [ ] Implement a CSS theme framework.
+- [x] Create grid layout components.
+- [x] Implement a CSS theme framework.
 - [ ] Implement a common transition-able component.
   * Would be great to include a callback that is called after the element is rendered to the screen (for slide-in animations, for example).
   * One possibility is to provide an API like this:
@@ -61,11 +61,13 @@ Two possible approaches:
     ```
     which is not very informative.
   - [ ] Expose a function to allow creation of HTML elements with programmatically generated tag names. See `cake.Heading`. I don't really want to expose the `compose` function to users directly.
+  - [x] Verify if themes can be overriden by child components. If not, we need to allow this.
+  - [ ] Build mechanism to inject default theme into the very root (top) component. This way, components can rely on certain things to be available in the theme (such as colors).
 
 ## Worktime Todos
 - [x] Implement Router (for GitHub Pages)
-- [ ] Create toggle component
-- [ ] Implement Light/Dark mode
+- [x] Create toggle component
+- [x] Implement Light/Dark mode
 - [ ] Build menu component
 - [ ] lastChangeDate needs to be stored in localStorage so that it persists. Then, when loading records from localStorage, the app can check the lastChangeDate and if it is from a different day than today, it can clear the existing records and notify the user.
   * Another option is to store records under a key generated from the day's date. That way, all history can be kept. Then, the DataViewer could provide an option to select which day's records to show. Or, the DataViewer could just show all data in localStorage.

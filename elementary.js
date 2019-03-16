@@ -1,6 +1,6 @@
 function Extend(sup, methods, props) {
   const obj = new sup(props);
-  // Object.assign(obj, methods);
+
   Object.keys(methods).map(key => (
     obj[key] = methods[key].bind(obj)
   ));
@@ -21,8 +21,11 @@ class Elementary {
     this._isInitialized = false;
   }
 
+  _applyTheme(theme) {
+    this._props.theme = mergeThemes(theme, this._props.theme);
+  }
+
   _init() {
-    console.log(this);
     // Initialize or retrieve state
     if (!store[this.props.id]) {
       this.initState();  // initState if no state is stored
@@ -34,9 +37,10 @@ class Elementary {
   }
 
   /* Attaches the component to the given DOM node. */
-  attach(node) {
+  attachTo(node) {
     this._containerNode = node;
-    this._node = node.appendChild(this.render());
+    this._node = this.render()(this._props.theme);
+    node.appendChild(this._node);
   }
 
   /* Returns the DOM node representing the root element in the
@@ -51,7 +55,7 @@ class Elementary {
   }
 
   set props(val) {
-    console.error('Cannot set props. props is immutable.')
+    console.error('Cannot set props. props is immutable.');
   }
 
   get state() {
@@ -94,13 +98,11 @@ class Elementary {
     //
     // update(this._state, delta);
     Object.keys(delta).map(key => this._state[key] = delta[key]);
-    console.log(`this._state: ${this._state}`);
-    console.log(this._state);
     store[this.props.id] = this._state;
 
     // Re-render
     const oldNode = this._node;
-    this._node = this.render();
+    this._node = this.render()(this._props.theme);
     this._containerNode.replaceChild(this._node, oldNode);
 
     if (window.DEBUG) {
@@ -156,9 +158,106 @@ function makeSVGElement(el) {
   }
 }
 
+// Returns: (...args) -> (theme) -> Element
 function ElementaryFunc(func) {
-  // func returns an Element
+  // func returns: (props) -> (theme) -> Element
   return (...args) => compose(func, ...args);
+}
+
+/* Merges the two themes, allowing the child to override properties from
+ * the parent theme. Returns a new object, representing the merged theme.
+ */
+function mergeThemes(parent, child) {
+  var theme = JSON.parse(JSON.stringify(parent || {}));
+  if (child === null || child === undefined) {
+    return theme;
+  }
+  Object.keys(child).map(key => {
+    if (['string', 'number', 'boolean'].includes(typeof child[key])) {
+      theme[key] = child[key];
+    } else {
+      if (parent && key in parent) {
+        theme[key] = mergeThemes(parent[key], child[key]);  // deep copy objects
+      } else {
+        theme[key] = JSON.parse(JSON.stringify(child[key]));
+      }
+    }
+  });
+
+  return theme;
+}
+
+/*
+ *
+ * Params:
+ *    elFunc: A function that returns a closure:
+ *            (props) -> (theme) -> Element
+ *
+ * Returns: (theme) -> Element
+ */
+function compose(elFunc, ...args) {
+  var props = null;
+  var text = null;
+  var theme = null;
+
+  // Look for props and text (can be in either order)
+  for (let i = 0; i < 2 && i < args.length; i++) {
+    if (typeof args[i] === 'string' && !text) {
+      text = args[i];
+    } else if (typeof args[i] === 'object'
+        && typeof args[i] !== 'function'
+        && !Array.isArray(args[i])
+        && !props
+        && !(args[i] instanceof Elementary)) {
+      props = args[i];
+    } else {
+      break;
+    }
+  }
+
+  // Extract theme
+  if (props && props.theme) {
+    theme = props.theme;
+  }
+
+  const start = (props ? 1 : 0) + (text ? 1 : 0);
+  args = args.flat(1);  // Flatten arrays in args
+
+  return (parentTheme) => {
+    if (props === null) {
+      props = {};
+    }
+
+    const mergedTheme = mergeThemes(parentTheme, theme);
+    props.theme = mergedTheme;
+
+    var element = elFunc(props);  // This handles the makeHTMLElement variety
+
+    if (!(element instanceof Element)) {  // This handles ElementaryFunc components
+      // TODO: the parentTheme should be passed in here?
+      element = element(mergedTheme);
+    }
+
+    if (text) {
+      element.appendChild(document.createTextNode(text));
+    }
+
+    for (let i = start; i < args.length; i++) {
+      if (typeof args[i] === 'function') {
+        element.appendChild(args[i](mergedTheme));
+      } else if (args[i] instanceof Elementary) {
+        args[i]._applyTheme(mergedTheme);
+        args[i]._init();
+        args[i].attachTo(element);
+      } else if (args[i] === null) {
+        // do nothing
+      } else {
+        console.error('Unsupported argument in element composition: ', args[i]);
+      }
+    }
+
+    return element;
+  };
 }
 
 function Route(route, ...components) {
@@ -171,56 +270,9 @@ function Route(route, ...components) {
   return [...components];
 }
 
-function compose(elFunc, ...args) {
-  var props = null;
-  var text = null;
-
-  // Look for props and text (can be in either order)
-  for (let i = 0; i < 2 && i < args.length; i++) {
-    if (typeof args[i] === 'string' && !text) {
-      text = args[i];
-    } else if (typeof args[i] === 'object'
-        && !(args[i] instanceof Element)
-        && !(args[i] instanceof Elementary)
-        && !Array.isArray(args[i])
-        && !props) {
-      props = args[i];
-    } else {
-      break;
-    }
-  }
-
-  // NOTE: need to pass empty object if props == null???
-  // const element = func(props ? props : {});
-  const element = elFunc(props);
-
-  if (text) {
-    element.appendChild(document.createTextNode(text));
-  }
-
-  const start = (props ? 1 : 0) + (text ? 1 : 0);
-  args = args.flat(1);  // Flatten arrays in args
-
-  for (let i = start; i < args.length; i++) {
-    if (args[i] instanceof Element) {
-      element.appendChild(args[i]);
-    } else if (args[i] instanceof Elementary) {
-      // TODO: init should only be called once, ever. When smarter DOM
-      //       updating is implemented, this will probably be removed.
-      args[i]._init();
-      args[i].attach(element);
-    } else if (args[i] === null) {
-      // do nothing
-    } else {
-      console.error('Unsupported argument in element composition: ', args[i]);
-    }
-  }
-
-  return element;
-}
-
 // HTML Elements
 const div = (...args) => compose(makeHTMLElement('div'), ...args);
+const span = (...args) => compose(makeHTMLElement('span'), ...args);
 const h1 = (...args) => compose(makeHTMLElement('h1'), ...args);
 const h2 = (...args) => compose(makeHTMLElement('h2'), ...args);
 const p = (...args) => compose(makeHTMLElement('p'), ...args);
@@ -247,7 +299,9 @@ export {
   Route,
   compose,
   makeHTMLElement,
+  mergeThemes,
   div,
+  span,
   h1,
   h2,
   p,
