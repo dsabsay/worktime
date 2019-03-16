@@ -12,28 +12,6 @@ const DEFAULT_THEME = {
   spacing: '1rem',
 };
 
-// const theme = {
-//   colors: {
-//     primary: '#353535',
-//     secondary: '#e2e2e2',
-//     background: 'white',
-//     accent: '#92cff3',
-//   },
-//   fontFamily: 'sans-serif',
-//   spacing: '1rem',
-// };
-
-// const Button = ElementaryFunc((props) => {
-//   return button({
-//     onmouseover: () =>
-//     style: {
-//       border: 'none',
-//       backgroundColor: theme.colors.accent,
-//       cursor: 'pointer',
-//     }}
-//   );
-// });
-
 const Toggle = (props) => Extend(Elementary, {
   initState: function() {
     this.state = {
@@ -123,7 +101,6 @@ const Card = (props) => Extend(Elementary, {
   }
 }, props);
 
-
 // TODO: Convert to an ElementaryFunc
 const Button = (props) => Extend(Elementary, {
   initState: function() {
@@ -185,6 +162,11 @@ function get(obj, keys, defaultValue) {
   return obj;
 }
 
+/* Scales an rem value (string) by scale. */
+function scaleRem(rem, scale) {
+  return (Number.parseFloat(rem) * scale).toString().concat('rem');
+}
+
 const Heading = ElementaryFunc((props) => {
   const size = 'h' + (props && props.size ? props.size : 1);
 
@@ -193,6 +175,7 @@ const Heading = ElementaryFunc((props) => {
       color: get(props.theme, ['colors', 'primary'], DEFAULT_THEME.colors.primary),
       fontFamily: get(props.theme, ['fontFamily'], DEFAULT_THEME.fontFamily),
       margin: get(props.theme, ['spacing'], DEFAULT_THEME.margin),
+      ...props.style,
     }
   });
 });
@@ -202,6 +185,7 @@ const FlexContainer = ElementaryFunc((props) => (
     style: {
       display: 'flex',
       flexDirection: props.flexDirection || 'row',
+      alignItems: props.alignItems || 'flex-start',
       ...props.style,
     }
   })
@@ -226,4 +210,5 @@ export {
   Card,
   Toggle,
   get,
+  scaleRem,
 };

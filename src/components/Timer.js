@@ -19,12 +19,11 @@ function merge(base, delta) {
 
 const Timer = (props) => Extend(Elementary, {
   initState: function() {
-    console.log('initState');
     this.state = {
       isRecording: false,
       lastChangeDate: new Date(),
       currentCategory: null,
-      records: this.loadRecords() || {},
+      records: this.loadRecords(new Date()) || {},
     };
   },
 
@@ -33,14 +32,6 @@ const Timer = (props) => Extend(Elementary, {
       isRecording: true,
       lastChangeDate: new Date(),
     });
-  },
-
-  saveRecords: function(records) {
-    localStorage.setItem('records', JSON.stringify(records));
-  },
-
-  loadRecords: function() {
-    return JSON.parse(localStorage.getItem('records'));
   },
 
   stop: function() {
@@ -58,9 +49,20 @@ const Timer = (props) => Extend(Elementary, {
     this.changeState({
       records: newRecords,
       isRecording: false,
+      lastChangeDate: new Date(),
     });
 
-    this.saveRecords(newRecords);
+    this.saveRecords(now, newRecords);
+  },
+
+  saveRecords: function(date, records) {
+    const key = date.toDateString();
+    localStorage.setItem(key, JSON.stringify(records));
+  },
+
+  loadRecords: function(date) {
+    const key = date.toDateString();
+    return JSON.parse(localStorage.getItem(key));
   },
 
   handleClickRecord: function() {
@@ -68,35 +70,26 @@ const Timer = (props) => Extend(Elementary, {
 
     if (!isSameDay(this.state.lastChangeDate, now)) {
       this.changeState({
-        lastChangeDate: new Date(),
-        isRecording: !this.state.isRecording,
-        records: {},
+        records: this.loadRecords(new Date()) || {},
       });
-      this.saveRecords(this.state.records);
-      alert(`It's a new day! Records cleared.`);
-
-      return;
     }
 
     this.state.isRecording ? this.stop() : this.start();
   },
 
   handleCategorySelect: function(item) {
-    console.log(`category selected: ${item}`);
-
     if (!this.state.isRecording) {
       this.changeState({
         currentCategory: item,
-        lastChangeDate: new Date(),
       });
     } else if (this.state.isRecording) {
       this.stop();  // this saves the time elapsed
 
       this.changeState({
         currentCategory: item,
-        lastChangeDate: new Date(),
-        isRecording: true,
       });
+
+      this.start();
     }
   },
 
@@ -116,12 +109,6 @@ const Timer = (props) => Extend(Elementary, {
             id: 'my-ring-picker',
             onSelect: this.handleCategorySelect,
             items: this.props.categories,
-            // theme: {
-            //   colors: {
-            //     primary: 'green',
-            //     secondary: 'blue',
-            //   }
-            // }
           })
         )
       )

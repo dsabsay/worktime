@@ -1,9 +1,15 @@
+/* Allows for convenient definition of Stateful Components by users.
+ * This function essentially generates a "subclass" of Elementary that
+ * contains the methods defined by the user.
+ */
 function Extend(sup, methods, props) {
   const obj = new sup(props);
 
   Object.keys(methods).map(key => (
     obj[key] = methods[key].bind(obj)
   ));
+
+  obj._initState();
 
   return obj;
 }
@@ -18,22 +24,22 @@ class Elementary {
         not be preserved across re-renders unless an ID is set.`);
     }
 
-    this._isInitialized = false;
+    this._stateIsInitialized = false;
   }
 
   _applyTheme(theme) {
     this._props.theme = mergeThemes(theme, this._props.theme);
   }
 
-  _init() {
+  _initState() {
     // Initialize or retrieve state
     if (!store[this.props.id]) {
       this.initState();  // initState if no state is stored
-      this._isInitialized = true;
     } else {
       this.state = store[this.props.id];
-      this._isInitialized = true;
     }
+
+    this._stateIsInitialized = true;
   }
 
   /* Attaches the component to the given DOM node. */
@@ -63,7 +69,7 @@ class Elementary {
   }
 
   set state(val) {
-    if (this._isInitialized) {
+    if (this._stateIsInitialized) {
       console.error('Cannot set state directly. Use changeState() instead.');
       return;
     }
@@ -233,6 +239,10 @@ function compose(elFunc, ...args) {
 
     var element = elFunc(props);  // This handles the makeHTMLElement variety
 
+    if (element === null) {
+      return null;
+    }
+
     if (!(element instanceof Element)) {  // This handles ElementaryFunc components
       // TODO: the parentTheme should be passed in here?
       element = element(mergedTheme);
@@ -244,13 +254,17 @@ function compose(elFunc, ...args) {
 
     for (let i = start; i < args.length; i++) {
       if (typeof args[i] === 'function') {
-        element.appendChild(args[i](mergedTheme));
+        const subElement = args[i](mergedTheme);
+        if (subElement !== null) {
+          element.appendChild(args[i](mergedTheme));
+        }
       } else if (args[i] instanceof Elementary) {
         args[i]._applyTheme(mergedTheme);
-        args[i]._init();
         args[i].attachTo(element);
       } else if (args[i] === null) {
         // do nothing
+      } else if (typeof args[i] === 'string') {
+        element.appendChild(document.createTextNode(args[i]));
       } else {
         console.error('Unsupported argument in element composition: ', args[i]);
       }
@@ -276,6 +290,7 @@ const span = (...args) => compose(makeHTMLElement('span'), ...args);
 const h1 = (...args) => compose(makeHTMLElement('h1'), ...args);
 const h2 = (...args) => compose(makeHTMLElement('h2'), ...args);
 const p = (...args) => compose(makeHTMLElement('p'), ...args);
+const b = (...args) => compose(makeHTMLElement('b'), ...args);
 const a = (...args) => compose(makeHTMLElement('a'), ...args);
 const button = (...args) => compose(makeHTMLElement('button'), ...args);
 const img = (...args) => compose(makeHTMLElement('img'), ...args);
@@ -305,6 +320,7 @@ export {
   h1,
   h2,
   p,
+  b,
   a,
   button,
   img,
