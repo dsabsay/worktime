@@ -12,28 +12,6 @@ const DEFAULT_THEME = {
   spacing: '1rem',
 };
 
-// const theme = {
-//   colors: {
-//     primary: '#353535',
-//     secondary: '#e2e2e2',
-//     background: 'white',
-//     accent: '#92cff3',
-//   },
-//   fontFamily: 'sans-serif',
-//   spacing: '1rem',
-// };
-
-// const Button = ElementaryFunc((props) => {
-//   return button({
-//     onmouseover: () =>
-//     style: {
-//       border: 'none',
-//       backgroundColor: theme.colors.accent,
-//       cursor: 'pointer',
-//     }}
-//   );
-// });
-
 const Toggle = (props) => Extend(Elementary, {
   initState: function() {
     this.state = {
@@ -122,7 +100,6 @@ const Card = (props) => Extend(Elementary, {
     });
   }
 }, props);
-
 
 // TODO: Convert to an ElementaryFunc
 const Button = (props) => Extend(Elementary, {
