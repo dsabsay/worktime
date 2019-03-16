@@ -18,7 +18,7 @@ Symbol  |  Meaning
 `compose(): (theme) -> element`
 
 ## Implemented Solution
-The return type of `compose()` is (theme) -> Element (where Element is a DOM Element type). Previously, the return type of `compose()` was merely `Element`. But now, we delay full evaluation of each Element and Component until all arguments to the initial `compose()` call have been evaluated. Thus, the initial call to `compose()` will yield a "top-level" closure of type `(theme) -> Element` and it is the responsibility of the initial caller to then apply that closure to whichever theme is desired.
+The return type of `compose()` is `(theme) -> Element` (where Element is a DOM Element type). Previously, the return type of `compose()` was merely `Element`. But now, we delay full evaluation of each Element and Component until all arguments to the root (top-level) `compose()` call have been evaluated. Thus, the initial call to `compose()` will yield a "top-level" closure of type `(theme) -> Element` and it is the responsibility of the initial caller to then apply that closure to whichever theme is desired. The theme applied at this level would represent the "global" theme that cascades downward to all components in the application (unless those components choose to override the theme).
 
 When using an `Elementary` stateful component, this is taken care of by the `Elementary` class in the `attachTo()` method. For `ElementaryFunc` function components, the top-level caller of the particular function component must apply the desired theme to the returned closure, as in the example below:
 ```js
