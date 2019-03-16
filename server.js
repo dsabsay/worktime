@@ -6,6 +6,7 @@ const path = require('path');
 const DEFAULT_PORT = 4000;
 const DEFAULT_EVENT_STREAM_PORT = 4001;
 const INDEX_PATH = './index_dev.html';
+const WATCH_DIR = '.';
 
 const CONTENT_TYPES = {
   '.html': 'text/html',
@@ -52,7 +53,7 @@ http.createServer((req, res) => {
     'Access-Control-Allow-Origin': 'http://localhost:' + port,
   });
 
-  const srcDir = path.join(cwd, 'src');
+  const srcDir = path.join(cwd, WATCH_DIR);
   fs.watch(srcDir, { recursive: true }, (eventType, fileName) => {
     res.write(
       `event: reload\ndata:File changed.`
