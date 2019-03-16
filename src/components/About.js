@@ -85,8 +85,8 @@ const About = ElementaryFunc((props) => {
         `
         Elementary is a declarative, component-based framework that features unidirectional
         data flow, cascading themes for uniform styling, and supports stateful components
-        with automatic view updates. It's a simple implementation of many of the ideas
-        made popular by the React framework.
+        with automatic view updates. All with just a few hundred lines of code.
+        It's a simple implementation of many of the ideas made popular by the React framework.
         `
       ),
       p({ style: { margin: props.theme.spacing, color: props.theme.colors.primary } },
